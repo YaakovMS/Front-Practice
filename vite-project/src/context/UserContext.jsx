@@ -1,13 +1,14 @@
 // UserContext.jsx
-
 import React, { createContext, useContext, useState } from 'react';
 import { login, logout } from '../services/AuthService';
 
+// Adicione a função handleCadastro
 export const UserContext = createContext({
   userId: null,
   logado: false,
   handleLogin: () => {},
   handleLogout: () => {},
+  handleCadastro: () => {}, // Adicione esta linha
 });
 
 export const UserContextProvider = (props) => {
@@ -27,11 +28,18 @@ export const UserContextProvider = (props) => {
     setCurrentUser({ userId: null, logado: false });
   }
 
+  // Adicione a função handleCadastro
+  async function handleCadastro(nome, email, senha) {
+    // Implemente a lógica de cadastro aqui
+    // Lembre-se de chamar setCurrentUser quando o cadastro for bem-sucedido
+  }
+
   const contexto = {
     userId: currentUser.userId,
     logado: currentUser.logado,
     handleLogin,
     handleLogout,
+    handleCadastro, // Adicione esta linha
   };
 
   return (

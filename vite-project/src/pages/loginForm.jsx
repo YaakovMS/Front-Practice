@@ -1,65 +1,65 @@
 // LoginForm.jsx
 import React, { useContext, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom'; // Importe o Link do react-router-dom
 import { UserContext } from '../context/UserContext';
-
 import './LoginForm.css';
 
 function LoginForm() {
   const { handleLogin } = useContext(UserContext);
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
   const [errorLogin, setErrorLogin] = useState('');
-  const navigate = useNavigate();
-  const { register, handleSubmit, formState: { errors } } = useForm();
 
-  const validaEmail = {
-    required: {
-      value: true,
-      message: 'Email é obrigatório',
-    },
-    pattern: {
-      value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
-      message: 'Email inválido',
-    },
+  const handleTextInputChange = (e) => {
+    const { name, value } = e.target;
+    if (name === 'email') {
+      setEmail(value);
+    } else if (name === 'senha') {
+      setSenha(value);
+    }
   };
 
-  const validaSenha = {
-    required: {
-      value: true,
-      message: 'Senha é obrigatória',
-    },
-    minLength: {
-      value: 8,
-      message: 'Senha deve ter no mínimo 8 caracteres',
-    },
-  };
-
-  async function onSubmit(data) {
-    const { email, senha } = data;
+  const handleLoginClick = async () => {
     setErrorLogin('');
     try {
       await handleLogin(email, senha);
-      navigate('/');
+      // Trate o login com sucesso, por exemplo, redirecione para outra página
     } catch (error) {
       setErrorLogin(error.message);
     }
-  }
+  };
 
   return (
-    <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
+    <div className="login-form">
       {errorLogin && <p className="error">{errorLogin}</p>}
       <div>
         <label htmlFor="email">Email</label>
-        <input type="email" id="email" {...register('email', validaEmail)} />
-        {errors.email && <p className="error">{errors.email.message}</p>}
+        <input
+          type="text"
+          id="email"
+          name="email"
+          value={email}
+          onChange={handleTextInputChange}
+        />
       </div>
       <div>
         <label htmlFor="senha">Senha</label>
-        <input type="password" id="senha" {...register('senha', validaSenha)} />
-        {errors.senha && <p className="error">{errors.senha.message}</p>}
+        <input
+          type="password"
+          id="senha"
+          name="senha"
+          value={senha}
+          onChange={handleTextInputChange}
+        />
       </div>
-      <button>Entrar</button>
-    </form>
+      
+      <p>
+        Ainda não tem uma conta?{' '}
+        <Link to="/cadastro">Cadastre-se aqui</Link>
+      </p>
+      <button onClick={handleLoginClick}>Entrar</button>
+   
+    </div>
   );
 }
 
